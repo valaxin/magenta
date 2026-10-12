@@ -3,7 +3,8 @@ import express from 'express'
 import { connect } from 'mongoose'
 import logger from 'morgan'
 
-import simpleAPI from './routes/simple-api.js'
+import mongoUser from './routes/mongo-user.js'
+import mysqlUser from './routes/mysql-user.js'
 
 dotenv.config({ path: './../.env' });
 
@@ -15,7 +16,8 @@ app.use(express.json());
 
 app.get('/', async (req, res, next) => { res.json({ status: req.status }) })
 
-app.use('/api/v1', simpleAPI)
+app.use('/api/v1/mongo', mongoUser)
+// app.use('/api/v1/mysql', userOperations)
 
 app.listen(3000, (err) => {
   if (err) console.log(err)

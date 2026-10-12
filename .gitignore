@@ -3,6 +3,7 @@
 
 .env
 .mongo
+.mysql
 .todo
 
 app/node_modules
