@@ -16,10 +16,12 @@ services:
 
       - "${HOSTNAME}:${DEBUG_PORT}:${DEBUG_PORT}"
     volumes:
-      - ./App:/usr/src/app
+      - ./app:/usr/src/app
       - node_modules:/usr/src/app/node_modules
     depends_on:
       mongo:
+        condition: service_healthy
+      mysql:
         condition: service_healthy
 
   mongo:
@@ -47,13 +49,13 @@ services:
     env_file:
       - ".env"
     ports:
-      - "13306:3306"
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
     volumes:
       - ./.mysql:/var/lib/mysql
       - ./initdb:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
+      timeout: 5s
       retries: 10
 
 volumes:

@@ -17,7 +17,7 @@ app.use(express.json());
 app.get('/', async (req, res, next) => { res.json({ status: req.status }) })
 
 app.use('/api/v1/mongo', mongoUser)
-// app.use('/api/v1/mysql', userOperations)
+app.use('/api/v1/mysql', mysqlUser)
 
 app.listen(3000, (err) => {
   if (err) console.log(err)
