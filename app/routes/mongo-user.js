@@ -29,15 +29,11 @@ router.post('/user', validateHeaders, async (req, res, next) => {
   try {
     const { name, email, role } = req.body
     let user = new User({ name, email, role })
-    
-    if (error && error?.code == 1100) {
-      res
-    }
-
     await user.save()
-    res.send(201)
+
+    res.json({ id: user.id })
   } catch (err) {
-    res.send(err)
+    res.json(err)
   }
 })
 

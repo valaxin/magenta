@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: magenta-app
     build:
       context: .
       args:
@@ -15,18 +16,21 @@ services:
 
       - "${HOSTNAME}:${DEBUG_PORT}:${DEBUG_PORT}"
     volumes:
-      - ./App:/usr/src/app
+      - ./app:/usr/src/app
       - node_modules:/usr/src/app/node_modules
     depends_on:
       mongo:
         condition: service_healthy
+      mysql:
+        condition: service_healthy
 
   mongo:
     image: mongo:${MONGO_VERSION}
+    container_name: magenta-mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_INITDB_DATABASE: appdb
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
     ports:
       - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
@@ -35,6 +39,22 @@ services:
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
       interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    container_name: magenta-mysql
+    restart: unless-stopped
+    env_file:
+      - ".env"
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    volumes:
+      - ./.mysql:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 5s
       retries: 10
 
