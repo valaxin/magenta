@@ -13,7 +13,6 @@ services:
       MONGO_URL: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017/appdb?authSource=admin
     ports:
       - "${EXT_PORT}:${INT_PORT}"
-
       - "${HOSTNAME}:${DEBUG_PORT}:${DEBUG_PORT}"
     volumes:
       - ./app:/usr/src/app
@@ -52,7 +51,7 @@ services:
       - "${MYSQL_PORT}:${MYSQL_PORT}"
     volumes:
       - ./.mysql:/var/lib/mysql
-      - ./initdb:/docker-entrypoint-initdb.d
+      - ./initdb:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 5s
