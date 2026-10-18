@@ -20,7 +20,7 @@ export async function getAllMovies(req, res, next) {
 }
 
 router.get('/movies', getAllMovies, async (req, res, next) => {
-  res.json({ results: req.results })
+  res.json(req.movies)
 })
 
 export const mysqlMovies = router

@@ -11,17 +11,22 @@ function validateHeaders (req, res, next) {
   next()
 }
 
+export async function getAllUsers (req, res, next) {
+  try {
+    let users = await User.find()
+    req.users = users
+    next()
+  } catch (err) {
+    next(err)
+  }
+}
+
 // routes
 router.get('/', async (req, res, next) => { res.json({ v: 1 }) })
 
 // all of 'em
-router.get('/users', async (req, res, next) => {
-  try {
-    let users = await User.find()
-    users ? res.json(users) : res.send(404)
-  } catch (err) {
-    res.send(err)
-  }
+router.get('/users', getAllUsers, async (req, res, next) => {
+  res.json(req.users)
 })
 
 // make new
@@ -77,5 +82,6 @@ router.delete('/user/:id', async (req, res, next) => {
   }
 })
 
+export const mongoUsers = router
 
 export default router

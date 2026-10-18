@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { connect } from 'mongoose'
 import logger from 'morgan'
-import mongoUser from './routes/mongo-user.js'
+import { mongoUsers, getAllUsers } from './routes/mongo-user.js'
 import { mysqlMovies, getAllMovies } from './routes/mysql-movies.js'
 
 dotenv.config({ path: './../.env' });
@@ -27,7 +27,11 @@ app.get('/movies', getAllMovies, async(req, res, next) => {
   res.render('index', { movies: req.movies })
 })
 
-app.use('/api/v1/mongo', mongoUser)
+app.get('/users', getAllUsers, async(req, res, next) => {
+  res.render('index', { users: req.users })
+})
+
+app.use('/api/v1/mongo', mongoUsers)
 app.use('/api/v1/mysql', mysqlMovies)
 
 app.listen(3000, (err) => {
