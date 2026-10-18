@@ -2,9 +2,8 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { connect } from 'mongoose'
 import logger from 'morgan'
-
 import mongoUser from './routes/mongo-user.js'
-import mysqlMovies from './routes/mysql-movies.js'
+import { mysqlMovies, getAllMovies } from './routes/mysql-movies.js'
 
 dotenv.config({ path: './../.env' });
 
@@ -13,8 +12,20 @@ connect(process.env.MONGO_URL)
 const app = express()
 app.use(logger('dev'))
 app.use(express.json());
+app.set('view engine', 'pug')
 
-app.get('/', async (req, res, next) => { res.json({ status: req.status }) })
+app.use(express.static('public'))
+
+app.get('/', async (req, res, next) => {
+  res.render('index', {
+    title: `magenta`,
+    subtitle: `simple little javascript app`
+  })
+})
+
+app.get('/movies', getAllMovies, async(req, res, next) => {
+  res.render('index', { movies: req.movies })
+})
 
 app.use('/api/v1/mongo', mongoUser)
 app.use('/api/v1/mysql', mysqlMovies)

@@ -4,19 +4,25 @@ import mysql from 'mysql2/promise'
 
 const router = express.Router()
 
-router.get('/movies', async (req, res, next) => {
+export async function getAllMovies(req, res, next) {
   await using conn = await mysql.createConnection({
     database: process.env.MYSQL_DATABASE,
     host: 'mysql',
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
   })
-
   const [ results ] = await conn.query('SELECT * FROM `movies`')
   
   // conn.end() is called automatically when leaving the scope
+  
+  req.movies = results
+  next()
+}
 
-  res.json({ results })
+router.get('/movies', getAllMovies, async (req, res, next) => {
+  res.json({ results: req.results })
 })
+
+export const mysqlMovies = router
 
 export default router
