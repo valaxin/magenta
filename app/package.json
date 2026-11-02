@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "",
-    "fresh": "rm -rf ./../.mongo && docker compose up --build --attach app",
+    "start": "",
+    "fresh": "rm -rf ./../.mongo ./../.mysql && docker compose up --build --attach app",
     "destroy": "docker compose down -v"
   },
   "keywords": [],
   "type": "module",
   "dependencies": {
+    "@auth/express": "^0.12.3",
     "dotenv": "^18.0.5",
     "express": "^5.2.1",
     "mongoose": "^9.11.0",
